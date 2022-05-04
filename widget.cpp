@@ -93,36 +93,35 @@ QImage Widget::imgCalcPotential(QGraphicsPixmapItem *pixitem2,QGraphicsPixmapIte
                         convert(qRed(line[px]),sum),
                         convert(qGreen(line[px]),sum),
                         convert(qBlue(line[px]),sum),
-                        qAlpha(line[px]));
+                        convert(qAlpha(line[px]),sum));
         }
     }
-    return new_image;
-//    return imgNormalization(new_image);
+//    return new_image;
+    return imgNormalization(new_image);
 }
 
 // 数据标准化
 QImage Widget::imgNormalization(QImage img){
     QRgb *line = reinterpret_cast<QRgb *>(img.bits());
     int n = sizeof(*line)/sizeof(line[0]);
-    // function 1
-//    unsigned int max = 0;unsigned int min = 0;
-//    for(int i=0;i<n;i++){
-//       max = (line[i]>max)?line[i]:max;
-//       min = (line[i]<min)?line[i]:min;
-//    }
-//    unsigned int max_min = max - min;
-//    for(int i=1;i<n;i++){
-//       line[i] = (i-min)*255/max_min;
-//    }
-    // function 2
-    auto sum = 0;
-    for(int i=1;i<n;i++){
-       sum += line[i];
+    int max[3] = {0,0,0};
+    int min[3] = {0,0,0};
+    for(int i=0;i<n;i++){
+       max[0] = (qRed(line[i])>max[0])?qRed(line[i]):max[0];
+       max[1] = (qGreen(line[i])>max[1])?qGreen(line[i]):max[1];
+       max[2] = (qBlue(line[i])>max[2])?qBlue(line[i]):max[2];
+       min[0] = (qRed(line[i])<min[0])?qRed(line[i]):min[0];
+       min[1] = (qGreen(line[i])<min[1])?qGreen(line[i]):min[1];
+       min[2] = (qBlue(line[i])<min[2])?qBlue(line[i]):min[2];
     }
+    int max_min[3] = {max[0]-min[0],max[1]-min[1],max[2]-min[2]};
     for(int i=1;i<n;i++){
-       line[i] = (line[i]-sum/n)/std::sqrt((line[i]-sum/n)*(line[i]-sum/n)/(n-1));
+       line[i] = qRgba(
+                    (qRed(line[i])-min[0])*255/max_min[0],
+                    (qGreen(line[i])-min[1])*255/max_min[1],
+                    (qBlue(line[i])-min[2])*255/max_min[2],
+                     qAlpha(line[i]));
     }
-
     return img;
 }
 
