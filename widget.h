@@ -38,7 +38,8 @@ private:
     Worker *worker2;
     QThread workerThread2;
 
-    QImage imgCalcPotential(QGraphicsPixmapItem *,QImage,QGraphicsPixmapItem *,QImage);
+    QImage imgCalcPotential(QGraphicsPixmapItem *,QGraphicsPixmapItem *,QImage);
+    QImage imgNormalization(QImage);
     QImage img2Grey(QImage);
 
 private slots:

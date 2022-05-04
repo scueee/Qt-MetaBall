@@ -14,12 +14,12 @@ void Worker::doWork(double x, double y){
     QTime time;
     time.start();
     double angle = random % 90 * 3.14 / 180;
-    double dx = 100/10 * (random%2*2-1) * cos(angle);
-    double dy = 100/10 * (random%2*2-1) * sin(angle);
+    double dx = 100/15 * (random%2*2-1) * cos(angle);
+    double dy = 100/15 * (random%2*2-1) * sin(angle);
     while(!quit){
         int time1 = time.elapsed();
         emit move(x,y);
-        collisionDetection(x+50,y+50,778-11,521-11,&dx,&dy);
+        collisionDetection(x+50,y+50,478-11,421-11,&dx,&dy);
         x += dx;
         y += dy;
         int time2 = time.elapsed();
